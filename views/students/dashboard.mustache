@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  
+  <style>
+    .goal {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* Aligns items to the start of the container */
+      margin-bottom: 10px;
+    }
+    .goal p {
+      margin: 0;
+      flex-grow: 1; /* Allows the paragraph to grow and fill the space */
+    }
+    .icons {
+      display: flex;
+      gap: 20px; /* This is the space between your icons */
+      margin-left: 10px; /* Adjust this value as needed */
+    }
+    .complete-goal,
+    .delete-goal {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .completed {
+      text-decoration: line-through;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to Your Dashboard, {{ studentEmail }}!</h1>
+  </header>
+
+ <!-- My Goals Section -->
+<section>
+  <h2>My Goals</h2>
+  <!-- Loop to display each goal -->
+  {{#goals}}
+  <div class="goal">
+    <p class="{{#completed}}completed{{/completed}}">{{ goalDescription }}</p>
+    <span class="icons">
+      <!-- Completed goal tick icon -->
+      <button class="complete-goal" data-goal-id="{{ id }}">
+        {{#completed}}✅{{/completed}}
+        {{^completed}}✔️{{/completed}}
+      </button>
+      <!-- Delete goal cross icon -->
+      <button class="delete-goal" onclick="deleteGoal('{{ id }}');">❌</button>
+    </span>
+  </div>
+  {{/goals}}
+
+  <button onclick="window.location='/students/goals/add';">Add New Goal</button>
+</section>
+
+
+  <!-- Available Opportunities Section -->
+  <section>
+    <h2>Available Coaching/Mentoring Opportunities</h2>
+    {{#opportunities}}
+    <article>
+      <h3>{{ category }}</h3>
+      <p>{{ description }}</p>
+      <button onclick="window.location='/students/opportunities/add/{{ id }}';">Add</button>
+      <button onclick="window.location='/students/opportunities/remove/{{ id }}';">Remove</button>
+      <button onclick="window.location='/students/opportunities/edit/{{ id }}';">Edit</button>
+    </article>
+    {{/opportunities}}
+  </section>
+
+  <footer>
+    <p>&copy; 2023 Coaching Platform</p>
+  </footer>
+
+  <!-- Add the script at the bottom before closing the body tag -->
+  <script>
+function deleteGoal(goalId) {
+  if (!goalId) {
+    console.error('Goal ID is undefined or empty');
+    return;
+  }
+
+  fetch('/students/goals/remove/' + goalId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      // Include any other necessary headers
+    },
+    // If you need to send any body data, include it here
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    // Handle the response, e.g., refresh the page or update the UI
+    location.reload();
+  })
+  .catch(error => {
+    console.error('There was a problem with the deletion request:', error);
+  });
+}
+
+  // This function sends a request to the server to toggle the goal's completion status
+  function toggleGoalCompletion(goalId, button) {
+    fetch('/students/goals/toggleCompletion/' + goalId, {
+      method: 'POST', // or 'PUT' if your server requires it
+      headers: {
+        'Content-Type': 'application/json',
+        // Include other headers as needed, like CSRF tokens
+      },
+      body: JSON.stringify({ goalId: goalId }) // Send the goalId in the body if needed
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json(); // Assuming the server sends back JSON
+    })
+    .then(data => {
+      // Here you can update the button's text and the goal's appearance
+      if(data.completed) {
+        button.textContent = '✅'; // Mark as complete
+        button.parentElement.previousElementSibling.classList.add('completed');
+      } else {
+        button.textContent = '✔️'; // Mark as incomplete
+        button.parentElement.previousElementSibling.classList.remove('completed');
+      }
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    });
+  }
+
+  // Event listeners for the complete-goal buttons
+  document.addEventListener('DOMContentLoaded', function() {
+    var completeButtons = document.querySelectorAll('.complete-goal');
+    completeButtons.forEach(function(button) {
+      button.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission or navigation
+        var goalId = this.getAttribute('data-goal-id');
+        toggleGoalCompletion(goalId, this);
+      });
+    });
+  });
+</script>
+
+
+</body>
+</html>

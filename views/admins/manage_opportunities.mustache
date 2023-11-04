@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Opportunities</title>
+</head>
+<body>
+  <h1>Manage Opportunities</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#opportunities}}
+        <tr>
+          <td>{{title}}</td>
+          <td>{{description}}</td>
+          <td>
+            <a href="/admin/opportunities/{{id}}/edit">Edit</a>
+            <form action="/admin/opportunities/{{id}}/delete" method="POST">
+              <input type="submit" value="Delete">
+            </form>
+          </td>
+        </tr>
+      {{/opportunities}}
+    </tbody>
+  </table>
+  <a href="/admin/opportunities/new">Add New Opportunity</a>
+</body>
+</html>

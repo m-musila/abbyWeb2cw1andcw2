@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <!-- Add any additional head content here -->
+</head>
+<body>
+    <h1>Add New Opportunity</h1>
+    <form action="/admin/opportunities/create" method="POST">
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="Career advice">Career Advice</option>
+            <option value="Resume review">Resume Review</option>
+            <option value="Mock interview">Mock Interview</option>
+        </select>
+        
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea>
+        
+        <!-- Include other fields as necessary, like date, duration, mentor assigned, etc. -->
+
+        <button type="submit">Create Opportunity</button>
+    </form>
+    <a href="/admin/opportunities">Back to Opportunities List</a>
+</body>
+</html>

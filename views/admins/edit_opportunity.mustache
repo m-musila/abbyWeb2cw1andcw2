@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <!-- Add any additional head content here -->
+</head>
+<body>
+    <h1>Edit Opportunity</h1>
+    <form action="/admin/opportunities/{{ opportunity._id }}/update" method="POST">
+        <input type="hidden" name="_id" value="{{ opportunity._id }}">
+        
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="Career advice" {{#if career_advice_selected}}selected{{/if}}>Career Advice</option>
+            <option value="Resume review" {{#if resume_review_selected}}selected{{/if}}>Resume Review</option>
+            <option value="Mock interview" {{#if mock_interview_selected}}selected{{/if}}>Mock Interview</option>
+        </select>
+        
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required>{{ opportunity.description }}</textarea>
+        
+        <!-- Include other fields as necessary, like date, duration, mentor assigned, etc. -->
+
+        <button type="submit">Update Opportunity</button>
+    </form>
+    <a href="/admin/opportunities">Back to Opportunities List</a>
+</body>
+</html>

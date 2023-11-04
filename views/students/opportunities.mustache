@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Coaching Opportunities</title>
+</head>
+<body>
+  <h1>Available Coaching Opportunities</h1>
+  {{#opportunities}}
+    <div class="opportunity">
+      <h2>{{title}}</h2>
+      <p>{{description}}</p>
+      {{#registered}}
+        <form action="/student/opportunities/{{id}}/cancel" method="POST">
+          <input type="submit" value="Cancel Interest">
+        </form>
+      {{/registered}}
+      {{^registered}}
+        <form action="/student/opportunities/{{id}}/register" method="POST">
+          <input type="submit" value="Register Interest">
+        </form>
+      {{/registered}}
+    </div>
+  {{/opportunities}}
+  {{^opportunities}}
+    <p>No opportunities available at the moment. Please check back later.</p>
+  {{/opportunities}}
+</body>
+</html>
